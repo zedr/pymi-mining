@@ -47,8 +47,8 @@ class IrcClient:
 async def main():
     client = IrcClient()
     await client.connect()
-    await client.set_nick("zedr2")
-    await client.set_user("")
+    await client.set_nick("zedrbot")
+    await client.set_user("zedrbot")
     await client.send("JOIN #ngi")
     try:
         await client.handle_forever()
