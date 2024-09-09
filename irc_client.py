@@ -17,7 +17,7 @@ class IrcClient:
         self.writer.write(message.encode() + b"\r\n")
         await self.writer.drain()
 
-    async def handle(self) -> None:
+    async def handle_forever(self) -> None:
         """Handle an incoming message from the server"""
         while True:
             line = await self.reader.readline()
@@ -43,7 +43,7 @@ async def main():
     await client.send("USER foo 0 * :foo")
     await client.send("JOIN #ngi")
     try:
-        await client.handle()
+        await client.handle_forever()
     finally:
         await client.disconnect()
 

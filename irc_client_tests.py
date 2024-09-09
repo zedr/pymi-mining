@@ -10,7 +10,7 @@ class FakeIrcServer:
         self.messages = []
         self.received = asyncio.Event()
 
-    async def handle_request(self, reader, writer):
+    async def handle_request(self, reader, _):
         data = await reader.readline()
         self.messages.append(data)
         self.received.set()
@@ -36,32 +36,27 @@ class IrcClientTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self._server_task = asyncio.create_task(self.create_server())
         await self._server_task
+        self.client = IrcClient()
+        await self.client.connect(self.test_server_host, self.test_server_port)
 
     async def asyncTearDown(self):
+        await self.client.disconnect()
         self._server_task.cancel()
         self._server.close()
 
     async def test_client_connection(self):
         """The client can connect to the server"""
-        client = IrcClient()
-        await client.connect(self.test_server_host, self.test_server_port)
-        await client.disconnect()
+        self.assertFalse(self.client.writer.transport.is_closing())
 
     async def test_client_sending_message(self):
-        client = IrcClient()
-        await client.connect(self.test_server_host, self.test_server_port)
-        await client.send("PING")
+        await self.client.send("PING")
         await self._irc_server.received.wait()
         self.assertEqual([b"PING\r\n"], self._irc_server.messages)
-        await client.disconnect()
 
     async def test_client_set_nick(self):
-        client = IrcClient()
-        await client.connect(self.test_server_host, self.test_server_port)
-        await client.set_nick("zedr")
+        await self.client.set_nick("zedr")
         await self._irc_server.received.wait()
         self.assertEqual([b"NICK zedr\r\n"], self._irc_server.messages)
-        await client.disconnect()
 
 
 if __name__ == "__main__":
