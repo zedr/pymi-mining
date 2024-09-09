@@ -38,6 +38,10 @@ class IrcClient:
         """Join a channel"""
         await self.send(f"JOIN #{channel_name}")
 
+    async def send_message(self, channel_name: str, message: str) -> None:
+        """Send a message to the given channel"""
+        await self.send(f"PRIVMSG #{channel_name} :{message}")
+
     async def disconnect(self) -> None:
         """Disconnect from the IRC server"""
         self.writer.close()
@@ -49,7 +53,8 @@ async def main():
     await client.connect()
     await client.set_nick("zedrbot")
     await client.set_user("zedrbot")
-    await client.send("JOIN #ngi")
+    await client.join_channel("ngi")
+    await client.send_message("ngi", "hello, world")
     try:
         await client.handle_forever()
     finally:

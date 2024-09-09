@@ -17,7 +17,7 @@ def mine(text: str, difficulty: int, nonce: int = 0) -> None:
 def main():
     text = sys.argv[1]
     difficulty = int(sys.argv[2])
-    mine(text, difficulty)    
+    mine(text, difficulty)
 
 
 if __name__ == "__main__":
