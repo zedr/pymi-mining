@@ -26,9 +26,17 @@ class IrcClient:
                 source, cmd, *words = message.split(" ")
                 print(source, cmd, *words)
 
-    async def set_nick(self, nick: str) -> None:
+    async def set_nick(self, nick_name: str) -> None:
         """Set the nick of the client"""
-        await self.send(f"NICK {nick}")
+        await self.send(f"NICK {nick_name}")
+
+    async def set_user(self, user_name: str) -> None:
+        """Set the user identity of the client"""
+        await self.send(f"USER {user_name} 0 * :{user_name}")
+
+    async def join_channel(self, channel_name: str) -> None:
+        """Join a channel"""
+        await self.send(f"JOIN #{channel_name}")
 
     async def disconnect(self) -> None:
         """Disconnect from the IRC server"""
@@ -40,7 +48,7 @@ async def main():
     client = IrcClient()
     await client.connect()
     await client.set_nick("zedr2")
-    await client.send("USER foo 0 * :foo")
+    await client.set_user("")
     await client.send("JOIN #ngi")
     try:
         await client.handle_forever()
