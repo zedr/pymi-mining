@@ -6,7 +6,7 @@ class IrcClient:
     """A simple asynchronous IRC client"""
 
     async def connect(
-            self, server_host: str = "127.1", server_port: int = 6667
+        self, server_host: str = "127.1", server_port: int = 6667
     ) -> None:
         """Connect to an IRC server"""
         self.reader, self.writer = await asyncio.open_connection(
@@ -19,10 +19,10 @@ class IrcClient:
         await self.writer.drain()
 
     async def handle_forever(
-            self,
-            handlers: Sequence[
-                Callable[[str, str, list[str]], Awaitable[Optional[bool]]]
-            ] = (),
+        self,
+        handlers: Sequence[
+            Callable[[str, str, list[str]], Awaitable[Optional[bool]]]
+        ] = (),
     ) -> None:
         """Handle an incoming message from the server"""
         while True:
@@ -62,8 +62,8 @@ class IrcClient:
 async def main():
     client = IrcClient()
     await client.connect()
-    await client.set_nick("rigelbot")
-    await client.set_user("zbotedrbot")
+    await client.set_nick("rigel")
+    await client.set_user("rigel")
     await client.join_channel("pymi")
     await client.send_message("pymi", "hello, world")
     try:
