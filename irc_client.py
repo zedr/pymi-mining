@@ -63,7 +63,7 @@ async def main():
     client = IrcClient()
     await client.connect()
     await client.set_nick("rigelbot")
-    await client.set_user("zbotedrbot")
+    await client.set_user("rigelbot")
     await client.join_channel("pymi")
     await client.send_message("pymi", "hello, world")
     try:
