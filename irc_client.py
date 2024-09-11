@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
+from typing import Callable, Sequence, Awaitable, Optional
 
 
 class IrcClient:
@@ -37,9 +38,41 @@ class IrcClient:
         """Send a message to the given channel"""
         await self.send(f"PRIVMSG #{channel_name} :{message}")
 
+    async def handle_forever(
+        self,
+        handlers: Sequence[
+            Callable[[str, str, list[str]], Awaitable[Optional[bool]]]
+        ] = (),
+    ) -> None:
+        """Handle an incoming message from the server"""
+        while True:
+            line = await self.reader.readline()
+            if line:
+                message = line.decode().strip()
+                source, cmd, *words = message.split(" ")
+                for handler in handlers:
+                    await handler(source, cmd, words)
+
+    @staticmethod
+    async def echo(src: str, cmd: str, msgs: list[str]) -> None:
+        print(src, cmd, msgs)
+
+
+async def main():
+    client = IrcClient()
+    await client.connect()
+    await client.set_nick("rigelbot")
+    await client.set_user("rigelbot")
+    await client.join_channel("pymi")
+    await client.send_message("pymi", "hello, world")
+    try:
+        await client.handle_forever(handlers=(client.echo,))
+    finally:
+        await client.disconnect()
+
 
 if __name__ == "__main__":
     try:
-        pass
+        asyncio.run(main())
     except KeyboardInterrupt:
         pass
