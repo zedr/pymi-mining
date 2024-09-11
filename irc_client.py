@@ -21,6 +21,13 @@ class IrcClient:
         self.writer.write(message.encode() + b"\r\n")
         await self.writer.drain()
 
+    async def set_nick(self, nick_name: str) -> None:
+        """Set the nick of the client"""
+        await self.send(f"NICK {nick_name}")
+
+    async def set_user(self, user_name: str) -> None:
+        """Set the user identity of the client"""
+        await self.send(f"USER {user_name} 0 * :{user_name}")
 
 if __name__ == "__main__":
     try:
