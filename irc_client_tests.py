@@ -65,6 +65,18 @@ class IrcClientTests(unittest.IsolatedAsyncioTestCase):
         await self._irc_server.received.wait()
         self.assertEqual([b"USER zedr 0 * :zedr\r\n"], self._irc_server.messages)
 
+    async def test_client_join_channel(self):
+        await self.client.join_channel("pymi")
+        await self._irc_server.received.wait()
+        self.assertEqual([b"JOIN #pymi\r\n"], self._irc_server.messages)
+
+    async def test_client_send_message(self):
+        await self.client.send_message("pymi", "hello, world")
+        await self._irc_server.received.wait()
+        self.assertEqual(
+            [b"PRIVMSG #pymi :hello, world\r\n"], self._irc_server.messages
+        )
+
 
 if __name__ == "__main__":
     unittest.main(warnings="ignore")

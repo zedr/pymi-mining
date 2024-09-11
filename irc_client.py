@@ -29,6 +29,15 @@ class IrcClient:
         """Set the user identity of the client"""
         await self.send(f"USER {user_name} 0 * :{user_name}")
 
+    async def join_channel(self, channel_name: str) -> None:
+        """Join a channel"""
+        await self.send(f"JOIN #{channel_name}")
+
+    async def send_message(self, channel_name: str, message: str) -> None:
+        """Send a message to the given channel"""
+        await self.send(f"PRIVMSG #{channel_name} :{message}")
+
+
 if __name__ == "__main__":
     try:
         pass
