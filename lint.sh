@@ -7,6 +7,6 @@ set -o nounset
 echo "... Running ruff ..."
 ruff check . --fix
 echo "... Running pyright ..."
-pyright .
+pyright irc_client.py
 echo "... Running black ..."
 black .

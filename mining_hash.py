@@ -30,13 +30,7 @@ def mine(text: str, difficulty: int, begin_nonce: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-d",
-        "--difficulty",
-        type=int,
-        dest="difficulty",
-        default=1
-    )
+    parser.add_argument("-d", "--difficulty", type=int, dest="difficulty", default=1)
     text = sys.stdin.read()
     mine(text, parser.parse_args().difficulty, 0)
 
