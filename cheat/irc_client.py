@@ -32,7 +32,7 @@ class IrcClient:
                 message = line.decode().strip()
                 source, cmd, *words = message.split(" ")
                 for handler in handlers:
-                    await handler(source, cmd, words)
+                    asyncio.create_task(handler(source, cmd, words))
 
     async def set_nick(self, nick_name: str) -> None:
         """Set the nick of the client"""
